@@ -158,7 +158,7 @@ create_rootfs_cache()
 
 		cd $SDCARD # this will prevent error sh: 0: getcwd() failed
 
-		bootstrap bullseye "$SDCARD" "https://mirrors.ustc.edu.cn/debian/"
+		bootstrap bullseye "$SDCARD" "http://deb.debian.org/debian/"
 
 		mount_chroot "$SDCARD"
 

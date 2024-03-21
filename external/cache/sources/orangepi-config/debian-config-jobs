@@ -1284,7 +1284,7 @@ function jobs ()
 		if [[ $PREFIX == beta ]]; then
 			AVAL_MIRROR=("beta.orangepi.com" "mirrors.netix.net/orangepi/apt/")
 			else
-			AVAL_MIRROR+=("apt.orangepi.com" "mirrors.tuna.tsinghua.edu.cn/orangepi/" "mirrors.netix.net/orangepi/apt/" "mirrors.dotsrc.org/orangepi-apt/")
+			AVAL_MIRROR+=("apt.orangepi.com" "mirrors.netix.net/orangepi/apt/" "mirrors.dotsrc.org/orangepi-apt/")
 		fi
 		local LIST=()
 		for i in "${AVAL_MIRROR[@]}"

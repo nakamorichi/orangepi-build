@@ -6,6 +6,5 @@ if [ "$RELEASE" != "raspi" ]; then
 fi
 
 #if [ ! -d "${ROOTFS_DIR}" ] || [ "${USE_QCOW2}" = "1" ]; then
-#	bootstrap ${RELEASE} "${ROOTFS_DIR}" https://mirrors.ustc.edu.cn/debian/
 #	#bootstrap ${RELEASE} "${ROOTFS_DIR}" http://deb.debian.org/debian/
 #fi

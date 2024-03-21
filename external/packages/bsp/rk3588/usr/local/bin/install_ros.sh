@@ -1,7 +1,6 @@
 #!/bin/bash
 
-#mirror_url=http://mirrors.ustc.edu.cn
-mirror_url=https://repo.huaweicloud.com
+mirror_url=http://packages.ros.org.jsk.imi.i.u-tokyo.ac.jp
 
 if [[ -n $1 && $1 =~ ros1|ros2 ]]; then
 	version=$1
@@ -25,7 +24,6 @@ if [[ $version == "ros1" && $release =~ focal ]]; then
 
 	sudo apt install -y python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
 
-	sudo sh -c 'echo "151.101.84.133 raw.githubusercontent.com" >> /etc/hosts'
 	source /opt/ros/noetic/setup.bash
 	sudo rosdep init
 	rosdep update

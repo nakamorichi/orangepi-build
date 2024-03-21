@@ -276,13 +276,7 @@ create_sources_list()
 	esac
 
 	# stage: add armbian repository and install key
-	#if [[ $DOWNLOAD_MIRROR == "china" ]]; then
-	#	echo "deb https://mirrors.tuna.tsinghua.edu.cn/armbian $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > "${SDCARD}"/etc/apt/sources.list.d/armbian.list
-	#elif [[ $DOWNLOAD_MIRROR == "bfsu" ]]; then
-	#    echo "deb http://mirrors.bfsu.edu.cn/armbian $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > "${SDCARD}"/etc/apt/sources.list.d/armbian.list
-	#else
-	#	echo "deb http://"$([[ $BETA == yes ]] && echo "beta" || echo "apt" )".armbian.com $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > "${SDCARD}"/etc/apt/sources.list.d/armbian.list
-	#fi
+	# echo "deb http://"$([[ $BETA == yes ]] && echo "beta" || echo "apt" )".armbian.com $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > "${SDCARD}"/etc/apt/sources.list.d/armbian.list
 
 	# replace local package server if defined. Suitable for development
 	#[[ -n $LOCAL_MIRROR ]] && echo "deb http://$LOCAL_MIRROR $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > "${SDCARD}"/etc/apt/sources.list.d/armbian.list
@@ -1643,16 +1637,6 @@ function webseed ()
 	local CCODE=$(curl -s redirect.armbian.com/geoip | jq '.continent.code' -r)
 	WEBSEED=($(curl -s https://redirect.armbian.com/mirrors | jq -r '.'${CCODE}' | .[] | values'))
 	# aria2 simply split chunks based on sources count not depending on download speed
-	# when selecting china mirrors, use only China mirror, others are very slow there
-	if [[ $DOWNLOAD_MIRROR == china ]]; then
-		WEBSEED=(
-		https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/
-		)
-	elif [[ $DOWNLOAD_MIRROR == bfsu ]]; then
-		WEBSEED=(
-		https://mirrors.bfsu.edu.cn/armbian-releases/
-		)
-	fi
 	for toolchain in ${WEBSEED[@]}; do
 		text="${text} ${toolchain}${1}"
 	done
@@ -1665,38 +1649,15 @@ function webseed ()
 
 download_and_verify()
 {
-
 	local remotedir=$1
 	local filename=$2
 	local localdir=$SRC/toolchains
 	local dirname=${filename//.tar.xz}
-
-        if [[ $DOWNLOAD_MIRROR == china ]]; then
-			local server="https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/"
-		elif [[ $DOWNLOAD_MIRROR == bfsu ]]; then
-			local server="https://mirrors.bfsu.edu.cn/armbian-releases/"
-		else
-			local server=${ARMBIAN_MIRROR}
-        fi
+	local server=${ARMBIAN_MIRROR}
 
 	if [[ -f ${localdir}/${dirname}/.download-complete ]]; then
 		return
 	fi
-
-	# switch to china mirror if US timeouts
-	timeout 10 curl --head --fail --silent ${server}${remotedir}/${filename} 2>&1 >/dev/null
-	if [[ $? -ne 7 && $? -ne 22 && $? -ne 0 ]]; then
-		display_alert "Timeout from $server" "retrying" "info"
-		server="https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/"
-
-		# switch to another china mirror if tuna timeouts
-		timeout 10 curl --head --fail --silent ${server}${remotedir}/${filename} 2>&1 >/dev/null
-		if [[ $? -ne 7 && $? -ne 22 && $? -ne 0 ]]; then
-			display_alert "Timeout from $server" "retrying" "info"
-			server="https://mirrors.bfsu.edu.cn/armbian-releases/"
-		fi
-	fi
-
 
 	# check if file exists on remote server before running aria2 downloader
 	[[ ! `timeout 10 curl --head --fail --silent ${server}${remotedir}/${filename}` ]] && return
@@ -1899,14 +1860,10 @@ install_docker() {
 		;;
 	esac
 
-	if [[ ${SELECTED_CONFIGURATION} == desktop ]]; then
-		mirror_url=https://repo.huaweicloud.com
-	else
-		mirror_url=https://mirrors.aliyun.com
-	fi
+	mirror_url=https://download.docker.com
 
-	chroot "${SDCARD}" /bin/bash -c "curl -fsSL ${mirror_url}/docker-ce/linux/${distributor_id}/gpg | apt-key add -"
-	echo "deb [arch=${ARCH}] ${mirror_url}/docker-ce/linux/${distributor_id} ${RELEASE} stable" > "${SDCARD}"/etc/apt/sources.list.d/docker.list
+	chroot "${SDCARD}" /bin/bash -c "curl -fsSL ${mirror_url}/linux/${distributor_id}/gpg | apt-key add -"
+	echo "deb [arch=${ARCH}] ${mirror_url}/linux/${distributor_id} ${RELEASE} stable" > "${SDCARD}"/etc/apt/sources.list.d/docker.list
 
 	chroot "${SDCARD}" /bin/bash -c "apt-get update"
 	chroot "${SDCARD}" /bin/bash -c "apt-get install -y -qq docker-ce docker-ce-cli containerd.io"

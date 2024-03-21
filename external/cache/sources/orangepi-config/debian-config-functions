@@ -308,9 +308,6 @@ function description
 		*uk.armbian.com*)
 			echo "United Kingdom"
 		;;
-		*mirrors.tuna.tsinghua.edu.cn/armbian/*)
-			echo "China"
-		;;
 		*mirrors.netix.net/armbian/apt/*)
 			echo "Bulgarija"
 		;;

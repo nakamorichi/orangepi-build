@@ -20,7 +20,6 @@ HOSTRELEASE=$(cat /etc/os-release | grep VERSION_CODENAME | cut -d"=" -f2)
 [[ -z $HOSTRELEASE ]] && HOSTRELEASE=$(cut -d'/' -f1 /etc/debian_version)
 [[ -z $EXIT_PATCHING_ERROR ]] && EXIT_PATCHING_ERROR="" # exit patching if failed
 [[ -z $HOST ]] && HOST="$BOARD" # set hostname to the board
-[[ -z $CHINA_DOWNLOAD_MIRROR ]] && CHINA_DOWNLOAD_MIRROR=huawei
 cd "${SRC}" || exit
 [[ -z "${ROOTFSCACHE_VERSION}" ]] && ROOTFSCACHE_VERSION=11
 [[ -z "${CHROOT_CACHE_VERSION}" ]] && CHROOT_CACHE_VERSION=7
@@ -55,20 +54,6 @@ fi
 # small SD card with kernel, boot script and .dtb/.bin files
 [[ $ROOTFS_TYPE == nfs ]] && FIXED_IMAGE_SIZE=64
 
-# Since we are having too many options for mirror management,
-# then here is yet another mirror related option.
-# Respecting user's override in case a mirror is unreachable.
-case $REGIONAL_MIRROR in
-	china)
-		[[ -z $USE_MAINLINE_GOOGLE_MIRROR ]] && [[ -z $MAINLINE_MIRROR ]] && MAINLINE_MIRROR=tuna
-		[[ -z $USE_GITHUB_UBOOT_MIRROR ]] && [[ -z $UBOOT_MIRROR ]] && UBOOT_MIRROR=gitee
-		[[ -z $GITHUB_MIRROR ]] && GITHUB_MIRROR=gitclone
-		[[ -z $DOWNLOAD_MIRROR ]] && DOWNLOAD_MIRROR=china
-		;;
-	*)
-		;;
-esac
-
 # used by multiple sources - reduce code duplication
 [[ $USE_MAINLINE_GOOGLE_MIRROR == yes ]] && MAINLINE_MIRROR=google
 
@@ -76,14 +61,6 @@ case $MAINLINE_MIRROR in
 	google)
 		MAINLINE_KERNEL_SOURCE='https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux-stable'
 		MAINLINE_FIRMWARE_SOURCE='https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware.git'
-		;;
-	tuna)
-		MAINLINE_KERNEL_SOURCE='https://mirrors.tuna.tsinghua.edu.cn/git/linux-stable.git'
-		MAINLINE_FIRMWARE_SOURCE='https://mirrors.tuna.tsinghua.edu.cn/git/linux-firmware.git'
-		;;
-	bfsu)
-		MAINLINE_KERNEL_SOURCE='https://mirrors.bfsu.edu.cn/git/linux-stable.git'
-		MAINLINE_FIRMWARE_SOURCE='https://mirrors.bfsu.edu.cn/git/linux-firmware.git'
 		;;
 	*)
 		MAINLINE_KERNEL_SOURCE='git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git'
@@ -578,30 +555,6 @@ DEBIAN_MIRROR='deb.debian.org/debian'
 DEBIAN_SECURTY='security.debian.org/'
 UBUNTU_MIRROR='ports.ubuntu.com/'
 RASPI_MIRROR='archive.raspberrypi.org/debian/'
-
-if [[ $DOWNLOAD_MIRROR == "china" ]] ; then
-
-	if [[ ${CHINA_DOWNLOAD_MIRROR} == tsinghua ]]; then
-		DEBIAN_MIRROR='mirrors.tuna.tsinghua.edu.cn/debian'
-		DEBIAN_SECURTY='mirrors.tuna.tsinghua.edu.cn/debian-security'
-		UBUNTU_MIRROR='mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/'
-	fi
-
-	if [[ ${CHINA_DOWNLOAD_MIRROR} == huawei ]]; then
-		DEBIAN_MIRROR='repo.huaweicloud.com/debian'
-		DEBIAN_SECURTY='repo.huaweicloud.com/debian-security'
-		UBUNTU_MIRROR='repo.huaweicloud.com/ubuntu-ports/'
-	fi
-
-	RASPI_MIRROR='mirrors.ustc.edu.cn/archive.raspberrypi.org/debian/'
-
-fi
-
-if [[ $DOWNLOAD_MIRROR == "bfsu" ]] ; then
-	DEBIAN_MIRROR='mirrors.bfsu.edu.cn/debian'
-	DEBIAN_SECURTY='mirrors.bfsu.edu.cn/debian-security'
-	UBUNTU_MIRROR='mirrors.bfsu.edu.cn/ubuntu-ports/'
-fi
 
 if [[ "${ARCH}" == "amd64" ]]; then
 	UBUNTU_MIRROR='archive.ubuntu.com/ubuntu' # ports are only for non-amd64, of course.
