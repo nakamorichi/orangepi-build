@@ -23,7 +23,7 @@ fi
 #
 # check for internet connection to install dependencies
 #
-wget -q --spider www.baidu.com
+wget -q --spider google.com
 if [[ $? -ne 0 ]]; then
 	read -n 1 -s -p "Warning: Configuration cannot work properly without a working internet connection. \
 	Press CTRL C to stop or any key to ignore and continue."
@@ -170,7 +170,7 @@ fi
 			t=$t" options may have difficulties if you alter system settings manually.\n"
                         t=$t"\n\Z1Documentation:\Z0    http://www.orangepi.org"
 			t=$t"\n\n\Z1Support:\Z0    http://www.orangepi.org\n"
-                        t=$t"\n\Z1Sources:\Z0    https://github.com/orangepi-xunlong"
+                        t=$t"\n\Z1Sources:\Z0    https://github.com/nakamorichi"
 			show_box "Info" "$t" "18"
 		;;
 	esac

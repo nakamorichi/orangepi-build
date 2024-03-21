@@ -33,7 +33,7 @@ if [[ -f "${SRC}"/scripts/general.sh ]]; then
 else
 
 	echo "Error: missing build directory structure"
-	echo "Please clone the full repository by https://github.com/orangepi-xunlong/orangepi-build"
+	echo "Please clone the full repository by https://github.com/nakamorichi/orangepi-build"
 	exit 255
 
 fi

@@ -687,7 +687,7 @@ fingerprint_image()
 	Kernel:			Linux $VER
 	Build date:		$(date +'%d.%m.%Y')
 	Maintainer:		$MAINTAINER <$MAINTAINERMAIL>
-	Sources: 		https://github.com/orangepi-xunlong/orangepi-build
+	Sources: 		https://github.com/nakamorichi/orangepi-build
 	Support: 		http://www.orangepi.org/
 	EOF
 
@@ -1835,8 +1835,8 @@ install_wiringop()
 
 	if [[ ${IGNORE_UPDATES} != yes ]]; then
 
-		fetch_from_repo "https://github.com/orangepi-xunlong/wiringOP.git" "${EXTER}/cache/sources/wiringOP" "branch:next" "yes"
-		fetch_from_repo "https://github.com/orangepi-xunlong/wiringOP-Python.git" "${EXTER}/cache/sources/wiringOP-Python" "branch:next" "yes"
+		fetch_from_repo "https://github.com/nakamorichi/wiringOP.git" "${EXTER}/cache/sources/wiringOP" "branch:next" "yes"
+		fetch_from_repo "https://github.com/nakamorichi/wiringOP-Python.git" "${EXTER}/cache/sources/wiringOP-Python" "branch:next" "yes"
 
 	fi
 

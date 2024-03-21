@@ -120,7 +120,7 @@ RUN sed -i 's/\(^STATDOPTS=\).*/\1"--port 32765 --outgoing-port 32766"/' /etc/de
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8' TERM=screen
 WORKDIR /root/orangepi
-LABEL org.opencontainers.image.source="https://github.com/orangepi-xunlong/orangepi-build/blob/main/external/config/templates/Dockerfile" \
+LABEL org.opencontainers.image.source="https://github.com/nakamorichi/orangepi-build/blob/main/external/config/templates/Dockerfile" \
  
     org.opencontainers.image.authors="Igor Pecovnik" \
     org.opencontainers.image.licenses="GPL-2.0"
